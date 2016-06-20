@@ -47,14 +47,15 @@ int main(int argc, const char **argv)
 		//begin frame, draw the texture then end frame (the bit of maths just fits the image to the screen while maintaining aspect ratio)
 		BeginFrame();
 		float aspect_ratio = float(MAIN_TEXTURE_WIDTH)/float(MAIN_TEXTURE_HEIGHT);
-		float screen_aspect_ratio = 1280.f/720.f;
+//		float screen_aspect_ratio = 1080.f/1920.f;
+		float screen_aspect_ratio = 1.f;
                 int div; 
                 int fps;
                 sscanf(argv[1], "%d", &div);
                 sscanf(argv[2], "%d", &fps);
                 float rot = (6.282 / fps) * (i / div);
 		DrawTextureRect(&textures[0],-aspect_ratio/screen_aspect_ratio,-1.f,aspect_ratio/screen_aspect_ratio,1.f,rot);
-//		DrawTextureRect(&textures[0],0,0,1280,720,rot);
+//		DrawTextureRect(&textures[0],1.f,1.f,1.f,1.f,rot);
 		EndFrame();
 		i++;
 	}

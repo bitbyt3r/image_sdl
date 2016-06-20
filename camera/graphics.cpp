@@ -83,6 +83,9 @@ void InitGraphics()
 	success = graphics_get_display_size(0 /* LCD */, &GScreenWidth, &GScreenHeight);
 	assert( success >= 0 );
 
+//	GScreenWidth = 1280;
+//	GScreenHeight = 720;
+
 	dst_rect.x = 0;
 	dst_rect.y = 0;
 	dst_rect.width = GScreenWidth;
