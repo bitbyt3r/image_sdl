@@ -23,8 +23,7 @@ int main(int argc, char** argv) {
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     check_error_sdl(renderer == nullptr, "Unable to create a renderer");
 
-    // Set the default renderer color to corn blue
-    SDL_SetRenderDrawColor(renderer, 100, 149, 237, 255);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 
     // Initialize SDL_img
     int flags=IMG_INIT_JPG | IMG_INIT_PNG;
@@ -34,7 +33,7 @@ int main(int argc, char** argv) {
     // We need to create a destination rectangle for the image (where we want this to be show) on the renderer area
     SDL_Rect dest_rect;
     dest_rect.x = 0; dest_rect.y = 0;
-    dest_rect.w = 1280; dest_rect.h = 720;
+    dest_rect.w = 1920; dest_rect.h = 1080;
 
     // Load the image in a texture
     SDL_Texture *texture = load_texture("test.jpg", renderer);
@@ -51,10 +50,11 @@ int main(int argc, char** argv) {
     int steps = duration * 60;
     for (int i=0; i<steps; i++) {
 
+      int j = floor(i/3);
       // Clear the window content (using the default renderer color)
       SDL_RenderClear(renderer);
 
-      double angle = i * stepangle;
+      double angle = j * stepangle;
 
       // Copy the texture on the renderer
       SDL_RenderCopyEx(renderer, texture, NULL, &dest_rect, angle, NULL, SDL_FLIP_NONE);

@@ -1,0 +1,3 @@
+/home/mark25/image_sdl/camera/CMakeFiles/edit_cache.dir
+/home/mark25/image_sdl/camera/CMakeFiles/rebuild_cache.dir
+/home/mark25/image_sdl/camera/CMakeFiles/picamdemo.dir
