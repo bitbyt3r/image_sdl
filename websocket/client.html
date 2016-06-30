@@ -1,0 +1,95 @@
+<html>
+<head>
+<title>Image Spinner</title>
+<script type="text/javascript">
+var ws = new WebSocket("ws://localhost:8000/");
+
+var speed = 1;
+var setspeed = 1;
+var angle = 0;
+var accel = 0.01;
+var fps = 24;
+var select = true;
+var running = true;
+
+var updateRot = function () {
+  if (running == false) {
+    return;
+  }
+  var mult = 360 / fps;
+  angle = angle + (speed * mult);
+  var img = document.getElementById('spinner2');
+  img.style.transform = 'rotate('+angle+'deg)';
+  var img = document.getElementById('spinner1');
+  img.style.transform = 'rotate('+angle+'deg)';
+  if (speed < setspeed) {
+    speed = speed + accel;
+    if (speed > setspeed) {
+      speed = setspeed;
+    }
+  }
+  if (speed > setspeed) {
+    speed = speed - accel;
+    if (speed < setspeed) {
+      speed = setspeed;
+    }
+  }
+}
+
+window.setInterval(updateRot, 20);
+
+document.onkeypress = function(event) {
+  var charCode = event.keyCode;
+  var charStr = String.fromCharCode(charCode);
+  if (charStr == "p") {
+    running = !running;
+    cross = document.getElementById('crosshair');
+    if (!running) {
+      img = document.getElementById('spinner1');
+      cross.style.left = img.width / 2;
+      cross.style.top = img.height / 2;
+      cross.style.position = "absolute";
+      cross.style.visibility = "visible";
+      cross.style.color = "white";
+    } else {
+      cross.style.visibility = "hidden";
+    }
+  }
+  if (charStr == "w") {
+    fps = fps + 1;
+  }
+  if (charStr == "s") {
+    fps = fps - 1;
+  }
+}
+
+ws.onmessage = function (event) {
+  var data = JSON.parse(event.data);
+  if (data.type == "image") {
+    if (data.image) {
+      if (select) {
+        select = false;
+        var img1 = document.getElementById('spinner1');
+        var img2 = document.getElementById('spinner2');
+      } else {
+        select = true;
+        var img2 = document.getElementById('spinner1');
+        var img1 = document.getElementById('spinner2');
+      }
+      img1.src = "data:image/jpg;base64," + data.image;
+      img1.style.visibility = "visible";
+      img2.style.visibility = "hidden";
+    }
+  }
+  if (data.type == "speed") {
+    setspeed = data.speed.Data;
+  }
+}
+</script>
+</head>
+<body>
+<img id="spinner2" style="position: absolute; left: 0, top: 0;">
+<img id="spinner1" style="position: absolute; left: 0, top: 0;">
+<div id="crosshair" style="visibility: hidden">+</div>
+</body>
+</html>
