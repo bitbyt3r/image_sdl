@@ -20,11 +20,16 @@ class Camera:
       b64 = base64.encodestring(cnt)
       self.image['ID'] += 1
       self.image['Data'] = b64.decode('ASCII')
-      self.speed['Data'] = 1
+      self.speed['Data'] = self.getSpeed(frame)
       print(json.dumps(self.speed))
       print(json.dumps(self.image))
       sys.stdout.flush()
       time.sleep(2)
+
+  def getSpeed(frame):
+    speed = 1
+    
+    return speed
 
 cam = Camera()
 cam.start()

@@ -1,0 +1,75 @@
+<html>
+  <head>
+    <title>Image Spinner</title>
+<script type="text/javascript">
+var ws = new WebSocket("ws://localhost:8000/");
+
+var speed = 1;
+var setspeed = 1;
+var angle = 0;
+var accel = 0.01;
+var fps = 24;
+var running = true;
+
+var updateRot = function () {
+  if (running == false) {
+    return;
+  }
+  var mult = 360 / fps;
+  angle = angle + (speed * mult);
+  var img = document.getElementById('spinner');
+  img.style.transform = 'rotate('+angle+'deg)';
+  if (speed < setspeed) {
+    speed = speed + accel;
+    if (speed > setspeed) {
+      speed = setspeed;
+    }
+  }
+  if (speed > setspeed) {
+    speed = speed - accel;
+    if (speed < setspeed) {
+      speed = setspeed;
+    }
+  }
+}
+
+window.setInterval(updateRot, 40);
+
+document.onkeypress = function(event) {
+  var charCode = event.keyCode;
+  var charStr = String.fromCharCode(charCode);
+  if (charStr == "p") {
+    running = !running;
+    cross = document.getElementById('crosshair');
+    if (!running) {
+      img = document.getElementById('spinner');
+      cross.style.left = img.width / 2;
+      cross.style.top = img.height / 2;
+      cross.style.position = "absolute";
+      cross.style.visibility = "visible";
+      cross.style.color = "white";
+    } else {
+      cross.style.visibility = "hidden";
+    }
+  }
+  if (charStr == "w") {
+    fps = fps + 1;
+  }
+  if (charStr == "s") {
+    fps = fps - 1;
+  }
+}
+
+ws.onmessage = function (event) {
+  var data = JSON.parse(event.data);
+  if (data.type == "speed") {
+    setspeed = data.speed;
+  }
+}
+</script>
+  </head>
+  <body>
+    <img id="spinner" src="http://127.0.0.1:8080/cam.mjpg"/>
+    <div id="crosshair" style="visibility: hidden">+</div>
+  </body>
+</html>
