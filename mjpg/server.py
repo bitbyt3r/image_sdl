@@ -11,10 +11,46 @@ import websockets
 import asyncio
 import json
 import random
+import math
+import numpy as np
 
 def process(img):
   """Takes an image and assigns a speed from 0-1 based upon it."""
-  return random.random()
+  global start
+  frame = cv2.GaussianBlur(img, (21, 21), 0)
+  fgmask = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+  fgmask = cv2.absdiff(start, fgmask)
+  avg = max(np.average(fgmask), 10)
+  fgmask = cv2.dilate(fgmask, None, iterations=2)
+  ret, fgmask = cv2.threshold(fgmask, avg, 255, cv2.THRESH_BINARY)
+  image, contours, hierarchy = cv2.findContours(fgmask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+  bigContours = []
+  for contour in contours:
+    if cv2.contourArea(contour) >= 3000:
+      bigContours.append(contour)
+
+  ax = 0
+  ay = 0
+  for contour in bigContours:
+    moments = cv2.moments(contour)
+    cx = int(moments['m10']/moments['m00'])
+    cy = int(moments['m01']/moments['m00'])
+    ax += cx
+    ay += cy
+  if not bigContours:
+    speed = 0
+  else:
+    ax /= len(bigContours)
+    ay /= len(bigContours)
+    my, mx, channels = img.shape
+    my /= 2
+    mx /= 2
+    dist = math.sqrt((ax - mx)**2 + (ay - my)**2)
+    speed = max(min((mx - dist) / my, 1), 0.1)
+    if speed > 0.8:
+      speed = 1
+  return speed
 
 class CamHandler(BaseHTTPRequestHandler):
   def do_GET(self):
@@ -94,6 +130,10 @@ def main():
   global updater
   global capture
   capture = cv2.VideoCapture(0)
+  global start
+  ret, start = capture.read()
+  start = cv2.GaussianBlur(start, (21, 21), 0)
+  start = cv2.cvtColor(start, cv2.COLOR_BGR2GRAY)
   global img
   try:
     server = ThreadedHTTPServer(('localhost', 8080), CamHandler)

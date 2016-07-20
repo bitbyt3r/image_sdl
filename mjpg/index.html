@@ -64,6 +64,7 @@ ws.onmessage = function (event) {
   var data = JSON.parse(event.data);
   if (data.type == "speed") {
     setspeed = data.speed;
+    console.log(setspeed);
   }
 }
 </script>
