@@ -3,6 +3,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/picamdemo.dir/camera.cpp.o"
   "CMakeFiles/picamdemo.dir/cameracontrol.cpp.o"
   "CMakeFiles/picamdemo.dir/graphics.cpp.o"
+  "CMakeFiles/picamdemo.dir/input.cpp.o"
   "picamdemo.pdb"
   "picamdemo"
 )

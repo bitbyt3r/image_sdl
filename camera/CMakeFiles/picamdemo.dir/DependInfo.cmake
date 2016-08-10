@@ -7,6 +7,7 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/home/mark25/image_sdl/camera/camera.cpp" "/home/mark25/image_sdl/camera/CMakeFiles/picamdemo.dir/camera.cpp.o"
   "/home/mark25/image_sdl/camera/cameracontrol.cpp" "/home/mark25/image_sdl/camera/CMakeFiles/picamdemo.dir/cameracontrol.cpp.o"
   "/home/mark25/image_sdl/camera/graphics.cpp" "/home/mark25/image_sdl/camera/CMakeFiles/picamdemo.dir/graphics.cpp.o"
+  "/home/mark25/image_sdl/camera/input.cpp" "/home/mark25/image_sdl/camera/CMakeFiles/picamdemo.dir/input.cpp.o"
   "/home/mark25/image_sdl/camera/picam.cpp" "/home/mark25/image_sdl/camera/CMakeFiles/picamdemo.dir/picam.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")

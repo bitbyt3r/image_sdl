@@ -74,6 +74,26 @@ EGL/egl.h
 EGL/eglext.h
 /home/mark25/image_sdl/camera/EGL/eglext.h
 
+/home/mark25/image_sdl/camera/input.cpp
+stdio.h
+-
+unistd.h
+-
+errno.h
+-
+regex.h
+-
+dirent.h
+-
+fcntl.h
+-
+linux/input.h
+-
+stdbool.h
+-
+
+/home/mark25/image_sdl/camera/input.h
+
 /home/mark25/image_sdl/camera/mmalincludes.h
 bcm_host.h
 /home/mark25/image_sdl/camera/bcm_host.h
@@ -103,6 +123,8 @@ camera.h
 /home/mark25/image_sdl/camera/camera.h
 graphics.h
 /home/mark25/image_sdl/camera/graphics.h
+input.h
+/home/mark25/image_sdl/camera/input.h
 
 /opt/vc/include/EGL/egl.h
 eglplatform.h

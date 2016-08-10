@@ -254,9 +254,12 @@ CMakeFiles/picamdemo.dir/graphics.cpp.o: /opt/vc/include/interface/vmcs_host/vcg
 CMakeFiles/picamdemo.dir/graphics.cpp.o: /opt/vc/include/interface/vmcs_host/vchost_platform_config.h
 CMakeFiles/picamdemo.dir/graphics.cpp.o: /opt/vc/include/vcinclude/common.h
 
+CMakeFiles/picamdemo.dir/input.cpp.o: input.cpp
+
 CMakeFiles/picamdemo.dir/picam.cpp.o: camera.h
 CMakeFiles/picamdemo.dir/picam.cpp.o: cameracontrol.h
 CMakeFiles/picamdemo.dir/picam.cpp.o: graphics.h
+CMakeFiles/picamdemo.dir/picam.cpp.o: input.h
 CMakeFiles/picamdemo.dir/picam.cpp.o: mmalincludes.h
 CMakeFiles/picamdemo.dir/picam.cpp.o: picam.cpp
 CMakeFiles/picamdemo.dir/picam.cpp.o: /opt/vc/include/EGL/egl.h

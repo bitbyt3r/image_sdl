@@ -254,10 +254,13 @@ CMakeFiles/picamdemo.dir/graphics.cpp.o
  /opt/vc/include/interface/vmcs_host/vcgencmd.h
  /opt/vc/include/interface/vmcs_host/vchost_platform_config.h
  /opt/vc/include/vcinclude/common.h
+CMakeFiles/picamdemo.dir/input.cpp.o
+ /home/mark25/image_sdl/camera/input.cpp
 CMakeFiles/picamdemo.dir/picam.cpp.o
  /home/mark25/image_sdl/camera/camera.h
  /home/mark25/image_sdl/camera/cameracontrol.h
  /home/mark25/image_sdl/camera/graphics.h
+ /home/mark25/image_sdl/camera/input.h
  /home/mark25/image_sdl/camera/mmalincludes.h
  /home/mark25/image_sdl/camera/picam.cpp
  /opt/vc/include/EGL/egl.h

@@ -9,6 +9,6 @@ include_directories(/opt/vc/userland-master/interface/vcos/pthreads)
 include_directories(/opt/vc/userland-master/interface/vmcs_host/linux)
 include_directories(/opt/vc/userland-master/host_applications/linux/libs/bcm_host/include)
 link_directories(/opt/vc/lib)
-add_executable(picamdemo picam.cpp camera.cpp cameracontrol.cpp graphics.cpp)
+add_executable(picamdemo picam.cpp camera.cpp cameracontrol.cpp graphics.cpp input.cpp)
 
 target_link_libraries(picamdemo libmmal_core.so libmmal_util.so libmmal_vc_client.so libvcos.so libbcm_host.so GLESv2 EGL ${OpenCV_LIBS})

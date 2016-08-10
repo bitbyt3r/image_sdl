@@ -204,6 +204,33 @@ graphics.cpp.s:
 	$(MAKE) -f CMakeFiles/picamdemo.dir/build.make CMakeFiles/picamdemo.dir/graphics.cpp.s
 .PHONY : graphics.cpp.s
 
+input.o: input.cpp.o
+
+.PHONY : input.o
+
+# target to build an object file
+input.cpp.o:
+	$(MAKE) -f CMakeFiles/picamdemo.dir/build.make CMakeFiles/picamdemo.dir/input.cpp.o
+.PHONY : input.cpp.o
+
+input.i: input.cpp.i
+
+.PHONY : input.i
+
+# target to preprocess a source file
+input.cpp.i:
+	$(MAKE) -f CMakeFiles/picamdemo.dir/build.make CMakeFiles/picamdemo.dir/input.cpp.i
+.PHONY : input.cpp.i
+
+input.s: input.cpp.s
+
+.PHONY : input.s
+
+# target to generate assembly for a file
+input.cpp.s:
+	$(MAKE) -f CMakeFiles/picamdemo.dir/build.make CMakeFiles/picamdemo.dir/input.cpp.s
+.PHONY : input.cpp.s
+
 picam.o: picam.cpp.o
 
 .PHONY : picam.o
@@ -249,6 +276,9 @@ help:
 	@echo "... graphics.o"
 	@echo "... graphics.i"
 	@echo "... graphics.s"
+	@echo "... input.o"
+	@echo "... input.i"
+	@echo "... input.s"
 	@echo "... picam.o"
 	@echo "... picam.i"
 	@echo "... picam.s"
