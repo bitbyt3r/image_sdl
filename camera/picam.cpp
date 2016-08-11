@@ -3,6 +3,7 @@
 #include "camera.h"
 #include "graphics.h"
 #include "input.h"
+#include <math.h>
 
 #define MAIN_TEXTURE_WIDTH 512
 #define MAIN_TEXTURE_HEIGHT 512
@@ -30,7 +31,8 @@ int main(int argc, const char **argv)
 	float t_x = 0;
 	float t_y = 0;
 	float scale = 1.f;
-
+        float speed = 0;
+        float rot = 0;
 	while(1 == 1)
 	{
 		//lock the chosen frame buffer, and copy it directly into the corresponding open gl texture
@@ -53,17 +55,16 @@ int main(int argc, const char **argv)
 		}
 
 		//begin frame, draw the texture then end frame (the bit of maths just fits the image to the screen while maintaining aspect ratio)
-                Input(&c_x, &c_y, &scale, &t_x, &t_y);
+                Input(&c_x, &c_y, &scale, &t_x, &t_y, &speed);
 		BeginFrame();
 		float aspect_ratio = float(MAIN_TEXTURE_WIDTH)/float(MAIN_TEXTURE_HEIGHT);
 //		float screen_aspect_ratio = 1080.f/1920.f;
 		float screen_aspect_ratio = 1.f;
                 int div; 
                 int fps;
-                sscanf(argv[1], "%d", &div);
-                sscanf(argv[2], "%d", &fps);
-                float rot = (6.282 / fps) * (i / div);
-		DrawTextureRect(&textures[0],-aspect_ratio/screen_aspect_ratio+c_x,-1.f+c_y,(aspect_ratio/screen_aspect_ratio+c_x)*scale,(1.f+c_y)*scale,t_x,t_y,rot);
+                sscanf(argv[1], "%d", &fps);
+                rot = fmod((rot + ((6.282 / fps) * speed)), 6.282);
+		DrawTextureRect(&textures[0],-aspect_ratio/screen_aspect_ratio+c_x,-1.f+c_y,aspect_ratio/screen_aspect_ratio+c_x,1.f+c_y,t_x,t_y,rot,scale);
 //		DrawTextureRect(&textures[0],1.f,1.f,1.f,1.f,rot);
 		EndFrame();
 		i++;

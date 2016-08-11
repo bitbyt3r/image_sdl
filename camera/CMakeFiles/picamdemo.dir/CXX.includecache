@@ -91,6 +91,8 @@ linux/input.h
 -
 stdbool.h
 -
+math.h
+-
 
 /home/mark25/image_sdl/camera/input.h
 
@@ -125,6 +127,8 @@ graphics.h
 /home/mark25/image_sdl/camera/graphics.h
 input.h
 /home/mark25/image_sdl/camera/input.h
+math.h
+-
 
 /opt/vc/include/EGL/egl.h
 eglplatform.h

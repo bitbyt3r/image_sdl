@@ -289,7 +289,7 @@ bool GfxProgram::Create(GfxShader* vertex_shader, GfxShader* fragment_shader)
 	return true;	
 }
 
-void DrawTextureRect(GfxTexture* texture, float x0, float y0, float x1, float y1, float x2, float y2, float rot)
+void DrawTextureRect(GfxTexture* texture, float x0, float y0, float x1, float y1, float x2, float y2, float rot, float zoom)
 {
 	glUseProgram(GSimpleProg.GetId());
 	check();
@@ -297,6 +297,7 @@ void DrawTextureRect(GfxTexture* texture, float x0, float y0, float x1, float y1
 	glUniform2f(glGetUniformLocation(GSimpleProg.GetId(),"offset"),x0,y0);
 	glUniform2f(glGetUniformLocation(GSimpleProg.GetId(),"scale"),x1-x0,y1-y0);
 	glUniform2f(glGetUniformLocation(GSimpleProg.GetId(),"trans"),x2,y2);
+	glUniform2f(glGetUniformLocation(GSimpleProg.GetId(),"zoom"),zoom,zoom);
 	glUniform1f(glGetUniformLocation(GSimpleProg.GetId(),"rot"),rot);
 	glUniform1i(glGetUniformLocation(GSimpleProg.GetId(),"tex"), 0);
 	check();
