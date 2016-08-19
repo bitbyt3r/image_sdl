@@ -93,6 +93,8 @@ stdbool.h
 -
 math.h
 -
+stdlib.h
+-
 
 /home/mark25/image_sdl/camera/input.h
 
@@ -117,6 +119,14 @@ interface/mmal/util/mmal_connection.h
 /home/mark25/image_sdl/camera/interface/mmal/util/mmal_connection.h
 
 /home/mark25/image_sdl/camera/picam.cpp
+fstream
+-
+iostream
+-
+vector
+-
+iterator
+-
 stdio.h
 -
 unistd.h

@@ -117,6 +117,9 @@ MMAL_COMPONENT_T* CCamera::CreateCameraComponentAndSetupPorts()
 		cam_config.fast_preview_resume = 0;
 		cam_config.use_stc_timestamp = MMAL_PARAM_TIMESTAMP_MODE_RESET_STC;
 		mmal_port_parameter_set(camera->control, &cam_config.hdr);
+		MMAL_PARAM_AWBMODE_T awb_mode = MMAL_PARAM_AWBMODE_INCANDESCENT;
+		MMAL_PARAMETER_AWBMODE_T param = {{MMAL_PARAMETER_AWB_MODE,sizeof(param)}, awb_mode};
+		mmal_port_parameter_set(camera->control, &param.hdr);
 	}
 
 	// setup preview port format - QUESTION: Needed if we aren't using preview?

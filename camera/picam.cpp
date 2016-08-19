@@ -1,3 +1,7 @@
+#include <fstream>
+#include <iostream>
+#include <vector>
+#include <iterator>
 #include <stdio.h>
 #include <unistd.h>
 #include "camera.h"
@@ -33,6 +37,23 @@ int main(int argc, const char **argv)
 	float scale = 1.f;
         float speed = 0;
         float rot = 0;
+        float fps = 24;
+
+        std::ifstream in("settings.txt");
+        std::vector<float> lines{ std::istream_iterator<float>(in),
+                                  std::istream_iterator<float>() };
+        if (lines.size() == 8) {
+                std::cout << "Read settings from file\n";
+                float c_x = lines[0];
+                float c_y = lines[1];
+                float t_x = lines[2];
+                float t_y = lines[3];
+                float scale = lines[4];
+                float speed = lines[5];
+                float rot = lines[6];
+                float fps = lines[7];
+        }
+
 	while(1 == 1)
 	{
 		//lock the chosen frame buffer, and copy it directly into the corresponding open gl texture
@@ -58,16 +79,30 @@ int main(int argc, const char **argv)
                 Input(&c_x, &c_y, &scale, &t_x, &t_y, &speed);
 		BeginFrame();
 		float aspect_ratio = float(MAIN_TEXTURE_WIDTH)/float(MAIN_TEXTURE_HEIGHT);
-//		float screen_aspect_ratio = 1080.f/1920.f;
+//		float screen_aspect_ratio = 1920.f/1080.f;
 		float screen_aspect_ratio = 1.f;
-                int div; 
-                int fps;
-                sscanf(argv[1], "%d", &fps);
+                if (speed > 1.f) {
+                    speed = 1.f;
+                }
+                if (speed < -1.f) {
+                    speed = -1.f;
+                }
                 rot = fmod((rot + ((6.282 / fps) * speed)), 6.282);
 		DrawTextureRect(&textures[0],-aspect_ratio/screen_aspect_ratio+c_x,-1.f+c_y,aspect_ratio/screen_aspect_ratio+c_x,1.f+c_y,t_x,t_y,rot,scale);
 //		DrawTextureRect(&textures[0],1.f,1.f,1.f,1.f,rot);
 		EndFrame();
 		i++;
+                std::ofstream settings;
+                settings.open("settings.txt");
+                settings << c_x << '\n';
+                settings << c_y << '\n';
+                settings << t_x << '\n';
+                settings << t_y << '\n';
+                settings << scale << '\n';
+                settings << speed << '\n';
+                settings << rot << '\n';
+                settings << fps << '\n';
+                settings.close();
 	}
 
 	StopCamera();

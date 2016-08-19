@@ -7,6 +7,7 @@
 #include <linux/input.h>
 #include <stdbool.h>
 #include <math.h>
+#include <stdlib.h>
 
 bool Input ( float* c_x, float* c_y, float* scale, float* t_x, float* t_y, float* speed )
 {
@@ -127,19 +128,19 @@ bool Input ( float* c_x, float* c_y, float* scale, float* t_x, float* t_y, float
 		    if(evp->code == 0)
 		    {
 		        // Mouse Left/Right
-                        total = total + abs(evp->value);
+                        total = total + evp->value;
 		    }
 		
 		    if(evp->code == 1)
 		    {
 		        // Mouse Up/Down
-                        total = total + abs(evp->value);
+                        total = total + evp->value;
 		    }
 	        }
 	    }
         }
     }
-    *speed = total / 35.f;
+    *speed = (total / 500.f) + (*speed * 0.7);
 
     // Read events from keyboard
 
@@ -208,6 +209,10 @@ bool Input ( float* c_x, float* c_y, float* scale, float* t_x, float* t_y, float
                         *scale = *scale - 0.1;
 			printf("S: %f\n", *scale);
 		    }
+                    if(evp->code == KEY_ESC)
+                    {
+                        exit(0);
+                    }
 		}
 
 
