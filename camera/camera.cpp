@@ -20,7 +20,7 @@ CCamera* StartCamera(int width, int height, int framerate, int num_levels, bool 
 	//can't create more than one camera
 	if(GCamera != NULL)
 	{
-		printf("Can't create more than one camera\n");
+		printf(" Can't create more than one camera\n");
 		return NULL;
 	}
 
@@ -29,7 +29,7 @@ CCamera* StartCamera(int width, int height, int framerate, int num_levels, bool 
 	if(!GCamera->Init(width,height,framerate,num_levels,do_argb_conversion))
 	{
 		//failed so clean up
-		printf("Camera init failed\n");
+		printf(" Camera init failed\n");
 		delete GCamera;
 		GCamera = NULL;
 	}
@@ -75,14 +75,14 @@ MMAL_COMPONENT_T* CCamera::CreateCameraComponentAndSetupPorts()
 	status = mmal_component_create(MMAL_COMPONENT_DEFAULT_CAMERA, &camera);
 	if (status != MMAL_SUCCESS)
 	{
-		printf("Failed to create camera component\n");
+		printf(" Failed to create camera component\n");
 		return NULL;
 	}
 
 	//check we have output ports
 	if (!camera->output_num)
 	{
-		printf("Camera doesn't have output ports");
+		printf(" Camera doesn't have output ports");
 		mmal_component_destroy(camera);
 		return NULL;
 	}
@@ -96,7 +96,7 @@ MMAL_COMPONENT_T* CCamera::CreateCameraComponentAndSetupPorts()
 	status = mmal_port_enable(camera->control, CameraControlCallback);
 	if (status != MMAL_SUCCESS)
 	{
-		printf("Unable to enable control port : error %d", status);
+		printf(" Unable to enable control port : error %d", status);
 		mmal_component_destroy(camera);
 		return NULL;
 	}
@@ -117,9 +117,12 @@ MMAL_COMPONENT_T* CCamera::CreateCameraComponentAndSetupPorts()
 		cam_config.fast_preview_resume = 0;
 		cam_config.use_stc_timestamp = MMAL_PARAM_TIMESTAMP_MODE_RESET_STC;
 		mmal_port_parameter_set(camera->control, &cam_config.hdr);
-		MMAL_PARAM_AWBMODE_T awb_mode = MMAL_PARAM_AWBMODE_INCANDESCENT;
+		MMAL_PARAM_AWBMODE_T awb_mode = MMAL_PARAM_AWBMODE_AUTO;
 		MMAL_PARAMETER_AWBMODE_T param = {{MMAL_PARAMETER_AWB_MODE,sizeof(param)}, awb_mode};
 		mmal_port_parameter_set(camera->control, &param.hdr);
+		MMAL_PARAM_EXPOSUREMODE_T exp_mode = MMAL_PARAM_EXPOSUREMODE_SPOTLIGHT;
+		MMAL_PARAMETER_EXPOSUREMODE_T eparam = {{MMAL_PARAMETER_EXPOSURE_MODE,sizeof(param)}, exp_mode};
+		mmal_port_parameter_set(camera->control, &eparam.hdr);
 	}
 
 	// setup preview port format - QUESTION: Needed if we aren't using preview?
@@ -137,7 +140,7 @@ MMAL_COMPONENT_T* CCamera::CreateCameraComponentAndSetupPorts()
 	status = mmal_port_format_commit(preview_port);
 	if (status != MMAL_SUCCESS)
 	{
-		printf("Couldn't set preview port format : error %d", status);
+		printf(" Couldn't set preview port format : error %d", status);
 		mmal_component_destroy(camera);
 		return NULL;
 	}
@@ -157,7 +160,7 @@ MMAL_COMPONENT_T* CCamera::CreateCameraComponentAndSetupPorts()
 	status = mmal_port_format_commit(video_port);
 	if (status != MMAL_SUCCESS)
 	{
-		printf("Couldn't set video port format : error %d", status);
+		printf(" Couldn't set video port format : error %d", status);
 		mmal_component_destroy(camera);
 		return NULL;
 	}
@@ -177,7 +180,7 @@ MMAL_COMPONENT_T* CCamera::CreateCameraComponentAndSetupPorts()
 	status = mmal_port_format_commit(still_port);
 	if (status != MMAL_SUCCESS)
 	{
-		printf("Couldn't set still port format : error %d", status);
+		printf(" Couldn't set still port format : error %d", status);
 		mmal_component_destroy(camera);
 		return NULL;
 	}
@@ -189,7 +192,7 @@ MMAL_COMPONENT_T* CCamera::CreateCameraComponentAndSetupPorts()
 	status = mmal_component_enable(camera);
 	if (status != MMAL_SUCCESS)
 	{
-		printf("Couldn't enable camera\n");
+		printf(" Couldn't enable camera\n");
 		mmal_component_destroy(camera);
 		return NULL;	
 	}
@@ -208,14 +211,14 @@ MMAL_COMPONENT_T* CCamera::CreateSplitterComponentAndSetupPorts(MMAL_PORT_T* vid
 	status = mmal_component_create(MMAL_COMPONENT_DEFAULT_VIDEO_SPLITTER, &splitter);
 	if (status != MMAL_SUCCESS)
 	{
-		printf("Failed to create splitter component\n");
+		printf(" Failed to create splitter component\n");
 		goto error;
 	}
 
 	//check we have output ports
 	if (splitter->output_num != 4 || splitter->input_num != 1)
 	{
-		printf("Splitter doesn't have correct ports: %d, %d\n",splitter->input_num,splitter->output_num);
+		printf(" Splitter doesn't have correct ports: %d, %d\n",splitter->input_num,splitter->output_num);
 		goto error;
 	}
 
@@ -226,7 +229,7 @@ MMAL_COMPONENT_T* CCamera::CreateSplitterComponentAndSetupPorts(MMAL_PORT_T* vid
 	status = mmal_port_format_commit(input_port);
 	if (status != MMAL_SUCCESS)
 	{
-		printf("Couldn't set resizer input port format : error %d", status);
+		printf(" Couldn't set resizer input port format : error %d", status);
 		goto error;
 	}
 
@@ -238,7 +241,7 @@ MMAL_COMPONENT_T* CCamera::CreateSplitterComponentAndSetupPorts(MMAL_PORT_T* vid
 		status = mmal_port_format_commit(output_port);
 		if (status != MMAL_SUCCESS)
 		{
-			printf("Couldn't set resizer output port format : error %d", status);
+			printf(" Couldn't set resizer output port format : error %d", status);
 			goto error;
 		}
 	}
@@ -270,61 +273,71 @@ bool CCamera::Init(int width, int height, int framerate, int num_levels, bool do
 	MMAL_PORT_T *video_port = NULL;
 	MMAL_STATUS_T status;
 	CCameraOutput* outputs[4]; memset(outputs,0,sizeof(outputs));
-
+        printf(" A\n");
 	//create the camera component
 	camera = CreateCameraComponentAndSetupPorts();
 	if (!camera)
 		goto error;
 
+        printf(" B\n");
 	//get the video port
 	video_port = camera->output[MMAL_CAMERA_VIDEO_PORT];
 	video_port->buffer_num = 3;
 
-	//create the splitter component
+	printf(" C\n");
+        //create the splitter component
 	splitter = CreateSplitterComponentAndSetupPorts(video_port);
+        printf(" D\n");
 	if(!splitter)
 		goto error;
 
+        printf(" E\n");
 	//create and enable a connection between the video output and the resizer input
 	status = mmal_connection_create(&vid_to_split_connection, video_port, splitter->input[0], MMAL_CONNECTION_FLAG_TUNNELLING | MMAL_CONNECTION_FLAG_ALLOCATION_ON_INPUT);
 	if (status != MMAL_SUCCESS)
 	{
-		printf("Failed to create connection\n");
+        printf(" F\n");
+		printf(" Failed to create connection\n");
 		goto error;
 	}
 	status = mmal_connection_enable(vid_to_split_connection);
+        printf(" G\n");
 	if (status != MMAL_SUCCESS)
 	{
-		printf("Failed to enable connection\n");
+		printf(" Failed to enable connection\n");
 		goto error;
 	}
+        printf(" H\n");
 
 	//setup all the outputs
-	for(int i = 0; i < num_levels; i++)
-	{
-		outputs[i] = new CCameraOutput();
-		if(!outputs[i]->Init(Width >> i,Height >> i,splitter,i,do_argb_conversion))
+		outputs[0] = new CCameraOutput();
+		if(!outputs[0]->Init(Width,Height,splitter,0,do_argb_conversion))
 		{
-			printf("Failed to initialize output %d\n",i);
+			printf(" Failed to initialize output %d\n",0);
 			goto error;
 		}
-	}
+        printf(" I\n");
 
 	//begin capture
 	if (mmal_port_parameter_set_boolean(video_port, MMAL_PARAMETER_CAPTURE, 1) != MMAL_SUCCESS)
 	{
-		printf("Failed to start capture\n");
+		printf(" Failed to start capture\n");
 		goto error;
+        printf(" J\n");
 	}
 
+        printf(" K\n");
 	//store created info
 	CameraComponent = camera;
 	SplitterComponent = splitter;
+        printf(" L\n");
 	VidToSplitConn = vid_to_split_connection;
 	memcpy(Outputs,outputs,sizeof(outputs));
+        printf(" M\n");
 
 	//return success
-	printf("Camera successfully created\n");
+        printf(" N\n");
+	printf(" Camera successfully created\n");
 	return true;
 
 error:
@@ -369,7 +382,7 @@ void CCamera::Release()
 
 void CCamera::OnCameraControlCallback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffer)
 {
-	printf("Camera control callback\n");
+	printf(" Camera control callback\n");
 }
 
 bool CCamera::BeginReadFrame(int level, const void* &out_buffer, int& out_buffer_size)
@@ -399,7 +412,7 @@ CCameraOutput::~CCameraOutput()
 
 bool CCameraOutput::Init(int width, int height, MMAL_COMPONENT_T* input_component, int input_port_idx, bool do_argb_conversion)
 {
-	printf("Init camera output with %d/%d\n",width,height);
+	printf(" Init camera output with %d/%d\n",width,height);
 	Width = width;
 	Height = height;
 
@@ -424,13 +437,13 @@ bool CCameraOutput::Init(int width, int height, MMAL_COMPONENT_T* input_componen
 		status = mmal_connection_create(&connection, input_port, resizer->input[0], MMAL_CONNECTION_FLAG_TUNNELLING | MMAL_CONNECTION_FLAG_ALLOCATION_ON_INPUT);
 		if (status != MMAL_SUCCESS)
 		{
-			printf("Failed to create connection\n");
+			printf(" Failed to create connection\n");
 			goto error;
 		}
 		status = mmal_connection_enable(connection);
 		if (status != MMAL_SUCCESS)
 		{
-			printf("Failed to enable connection\n");
+			printf(" Failed to enable connection\n");
 			goto error;
 		}
 
@@ -452,7 +465,7 @@ bool CCameraOutput::Init(int width, int height, MMAL_COMPONENT_T* input_componen
 	output_queue = mmal_queue_create();
 	if(!output_queue)
 	{
-		printf("Failed to create output queue\n");
+		printf(" Failed to create output queue\n");
 		goto error;
 	}
 
@@ -506,7 +519,7 @@ void CCameraOutput::OnVideoBufferCallback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_
 				if (new_buffer)
 					status = mmal_port_send_buffer(port, new_buffer);
 				if (!new_buffer || status != MMAL_SUCCESS)
-					printf("Unable to return a buffer to the video port\n");
+					printf(" Unable to return a buffer to the video port\n");
 			}	
 		}
 	}
@@ -514,7 +527,7 @@ void CCameraOutput::OnVideoBufferCallback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_
 	//add the buffer to the output queue
 	mmal_queue_put(OutputQueue,buffer);
 
-	//printf("Video buffer callback, output queue len=%d\n", mmal_queue_length(OutputQueue));
+	//printf(" Video buffer callback, output queue len=%d\n", mmal_queue_length(OutputQueue));
 }
 
 void CCameraOutput::VideoBufferCallback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffer)
@@ -550,12 +563,12 @@ int CCameraOutput::ReadFrame(void* dest, int dest_size)
 
 bool CCameraOutput::BeginReadFrame(const void* &out_buffer, int& out_buffer_size)
 {
-	//printf("Attempting to read camera output\n");
+	//printf(" Attempting to read camera output\n");
 
 	//try and get buffer
 	if(MMAL_BUFFER_HEADER_T *buffer = mmal_queue_get(OutputQueue))
 	{
-		//printf("Reading buffer of %d bytes from output\n",buffer->length);
+		//printf(" Reading buffer of %d bytes from output\n",buffer->length);
 
 		//lock it
 		mmal_buffer_header_mem_lock(buffer);
@@ -590,7 +603,7 @@ void CCameraOutput::EndReadFrame()
 			if (new_buffer)
 				status = mmal_port_send_buffer(BufferPort, new_buffer);
 			if (!new_buffer || status != MMAL_SUCCESS)
-				printf("Unable to return a buffer to the video port\n");
+				printf(" Unable to return a buffer to the video port\n");
 		}	
 	}
 }
@@ -607,14 +620,14 @@ MMAL_COMPONENT_T* CCameraOutput::CreateResizeComponentAndSetupPorts(MMAL_PORT_T*
 	status = mmal_component_create("vc.ril.resize", &resizer);
 	if (status != MMAL_SUCCESS)
 	{
-		printf("Failed to create reszie component\n");
+		printf(" Failed to create reszie component\n");
 		goto error;
 	}
 
 	//check we have output ports
 	if (resizer->output_num != 1 || resizer->input_num != 1)
 	{
-		printf("Resizer doesn't have correct ports");
+		printf(" Resizer doesn't have correct ports");
 		goto error;
 	}
 
@@ -627,7 +640,7 @@ MMAL_COMPONENT_T* CCameraOutput::CreateResizeComponentAndSetupPorts(MMAL_PORT_T*
 	status = mmal_port_format_commit(input_port);
 	if (status != MMAL_SUCCESS)
 	{
-		printf("Couldn't set resizer input port format : error %d", status);
+		printf(" Couldn't set resizer input port format : error %d", status);
 		goto error;
 	}
 
@@ -646,7 +659,7 @@ MMAL_COMPONENT_T* CCameraOutput::CreateResizeComponentAndSetupPorts(MMAL_PORT_T*
 	status = mmal_port_format_commit(output_port);
 	if (status != MMAL_SUCCESS)
 	{
-		printf("Couldn't set resizer output port format : error %d", status);
+		printf(" Couldn't set resizer output port format : error %d", status);
 		goto error;
 	}
 
@@ -666,11 +679,11 @@ MMAL_POOL_T* CCameraOutput::EnablePortCallbackAndCreateBufferPool(MMAL_PORT_T* p
 	//setup video port buffer and a pool to hold them
 	port->buffer_num = buffer_count;
 	port->buffer_size = port->buffer_size_recommended;
-	printf("Creating pool with %d buffers of size %d\n", port->buffer_num, port->buffer_size);
+	printf(" Creating pool with %d buffers of size %d\n", port->buffer_num, port->buffer_size);
 	buffer_pool = mmal_port_pool_create(port, port->buffer_num, port->buffer_size);
 	if (!buffer_pool)
 	{
-		printf("Couldn't create video buffer pool\n");
+		printf(" Couldn't create video buffer pool\n");
 		goto error;
 	}
 
@@ -679,7 +692,7 @@ MMAL_POOL_T* CCameraOutput::EnablePortCallbackAndCreateBufferPool(MMAL_PORT_T* p
 	status = mmal_port_enable(port, cb);
 	if (status != MMAL_SUCCESS)
 	{
-		printf("Failed to set video buffer callback\n");
+		printf(" Failed to set video buffer callback\n");
 		goto error;
 	}
 
@@ -692,12 +705,12 @@ MMAL_POOL_T* CCameraOutput::EnablePortCallbackAndCreateBufferPool(MMAL_PORT_T* p
 			MMAL_BUFFER_HEADER_T *buffer = mmal_queue_get(buffer_pool->queue);
 			if (!buffer)
 			{
-				printf("Unable to get a required buffer %d from pool queue\n", q);
+				printf(" Unable to get a required buffer %d from pool queue\n", q);
 				goto error;
 			}
 			else if (mmal_port_send_buffer(port, buffer)!= MMAL_SUCCESS)
 			{
-				printf("Unable to send a buffer to port (%d)\n", q);
+				printf(" Unable to send a buffer to port (%d)\n", q);
 				goto error;
 			}
 		}

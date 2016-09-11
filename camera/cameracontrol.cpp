@@ -102,9 +102,9 @@ void raspicamcontrol_set_defaults(RASPICAM_CAMERA_PARAMETERS *params)
    params->ISO = 0;                    // 0 = auto
    params->videoStabilisation = 0;
    params->exposureCompensation = 0;
-   params->exposureMode = MMAL_PARAM_EXPOSUREMODE_AUTO;
-   params->exposureMeterMode = MMAL_PARAM_EXPOSUREMETERINGMODE_AVERAGE;
-   params->awbMode = MMAL_PARAM_AWBMODE_AUTO;
+   params->exposureMode = MMAL_PARAM_EXPOSUREMODE_SPOTLIGHT;
+   params->exposureMeterMode = MMAL_PARAM_EXPOSUREMETERINGMODE_SPOT;
+   params->awbMode = MMAL_PARAM_AWBMODE_TUNGSTEN;
    params->imageEffect = MMAL_PARAM_IMAGEFX_NONE;
    params->colourEffects.enable = 0;
    params->colourEffects.u = 128;
@@ -485,8 +485,6 @@ int raspicamcontrol_set_rotation(MMAL_COMPONENT_T *camera, int rotation)
    int my_rotation = ((rotation % 360 ) / 90) * 90;
 
    ret = mmal_port_parameter_set_int32(camera->output[0], MMAL_PARAMETER_ROTATION, my_rotation);
-   mmal_port_parameter_set_int32(camera->output[1], MMAL_PARAMETER_ROTATION, my_rotation);
-   mmal_port_parameter_set_int32(camera->output[2], MMAL_PARAMETER_ROTATION, my_rotation);
 
    return ret;
 }
@@ -512,9 +510,7 @@ int raspicamcontrol_set_flips(MMAL_COMPONENT_T *camera, int hflip, int vflip)
    if (vflip)
       mirror.value = MMAL_PARAM_MIRROR_VERTICAL;
 
-   mmal_port_parameter_set(camera->output[0], &mirror.hdr);
-   mmal_port_parameter_set(camera->output[1], &mirror.hdr);
-   return mmal_port_parameter_set(camera->output[2], &mirror.hdr);
+   return mmal_port_parameter_set(camera->output[0], &mirror.hdr);
 }
 
 /**

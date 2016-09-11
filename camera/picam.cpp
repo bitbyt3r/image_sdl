@@ -9,8 +9,8 @@
 #include "input.h"
 #include <math.h>
 
-#define MAIN_TEXTURE_WIDTH 512
-#define MAIN_TEXTURE_HEIGHT 512
+#define MAIN_TEXTURE_WIDTH 128
+#define MAIN_TEXTURE_HEIGHT 128
 
 char tmpbuff[MAIN_TEXTURE_WIDTH*MAIN_TEXTURE_HEIGHT*4];
 
@@ -44,14 +44,14 @@ int main(int argc, const char **argv)
                                   std::istream_iterator<float>() };
         if (lines.size() == 8) {
                 std::cout << "Read settings from file\n";
-                float c_x = lines[0];
-                float c_y = lines[1];
-                float t_x = lines[2];
-                float t_y = lines[3];
-                float scale = lines[4];
-                float speed = lines[5];
-                float rot = lines[6];
-                float fps = lines[7];
+                c_x = lines[0];
+                c_y = lines[1];
+                t_x = lines[2];
+                t_y = lines[3];
+                scale = lines[4];
+                speed = lines[5];
+                rot = lines[6];
+                fps = lines[7];
         }
 
 	while(1 == 1)
